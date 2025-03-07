@@ -18,7 +18,7 @@ Sigue estos pasos para configurar el proyecto en tu máquina local.
 ### 1. Clonar el Repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/pokeapiaeromexico.git
+git clone https://github.com/napsterh/reto-pokeapi-react-native
 cd pokeapiaeromexico
 ```
 ### 2. Instalar Dependencias
