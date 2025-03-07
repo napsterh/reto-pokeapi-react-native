@@ -10,8 +10,6 @@ Este proyecto es una aplicación móvil construida con [Expo](https://expo.dev/)
 - [Scripts Disponibles](#scripts-disponibles)
 - [Dependencias](#dependencias)
 - [Desarrollo](#desarrollo)
-- [Pruebas](#pruebas)
-- [Licencia](#licencia)
 
 ## Instalación
 
