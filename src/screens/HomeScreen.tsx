@@ -26,53 +26,53 @@ const HomeScreen = () => {
     const limit = 20;
 
     useEffect(() => {
-      cargarPokemones(offset);
+        cargarPokemones(offset);
     }, [offset]);
 
     const cargarPokemones = async (offset: number) => {
-      setloading(true);
-      try {
-        const storedPokemones = await AsyncStorage.getItem(`pokemones_${offset}`);
-        if (storedPokemones) {
-            const pokemonesGuardados = JSON.parse(storedPokemones);
-            setPokemones(pokemonesGuardados);
-            setPokemonesFiltrados(pokemonesGuardados);
+        setloading(true);
+        try {
+            const storedPokemones = await AsyncStorage.getItem(`pokemones_${offset}`);
+                if (storedPokemones) {
+                    const pokemonesGuardados = JSON.parse(storedPokemones);
+                    setPokemones(pokemonesGuardados);
+                    setPokemonesFiltrados(pokemonesGuardados);
+                    setloading(false);
+                    return;
+                }
+
+                const url = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`;
+                const respuesta = await fetch(url);
+                if (!respuesta.ok) {
+                    throw new Error('Error en la petición');
+                }
+                const data = await respuesta.json();
+
+                const listaPokemon = await Promise.all(
+                    data.results.map(async (pokemon: any) => {
+                        const respuestaPokemon = await fetch(pokemon.url);
+                        const details = await respuestaPokemon.json();
+                        return {
+                            id: details.id,
+                            name: details.name,
+                            image: details.sprites.front_default,
+                            height: details.height,
+                            weight: details.weight,
+                            types: details.types.map((type: any) => type.type.name),
+                        };
+                    })
+                );
+
+                await AsyncStorage.setItem(`pokemones_${offset}`, JSON.stringify(listaPokemon));
+
+                setPokemones(listaPokemon);
+                setPokemonesFiltrados(listaPokemon);
+        } catch (error) {
+            console.error(error);
+        } finally {
             setloading(false);
-            return;
         }
-
-          const url = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`;
-          const respuesta = await fetch(url);
-          if (!respuesta.ok) {
-              throw new Error('Error en la petición');
-          }
-          const data = await respuesta.json();
-
-          const listaPokemon = await Promise.all(
-              data.results.map(async (pokemon: any) => {
-                  const respuestaPokemon = await fetch(pokemon.url);
-                  const details = await respuestaPokemon.json();
-                  return {
-                      id: details.id,
-                      name: details.name,
-                      image: details.sprites.front_default,
-                      height: details.height,
-                      weight: details.weight,
-                      types: details.types.map((type: any) => type.type.name),
-                  };
-              })
-          );
-
-          await AsyncStorage.setItem(`pokemones_${offset}`, JSON.stringify(listaPokemon));
-
-          setPokemones(listaPokemon);
-          setPokemonesFiltrados(listaPokemon);
-      } catch (error) {
-          console.error(error);
-      } finally {
-          setloading(false);
-      }
-  };
+    };
 
     useEffect(() => {
         const filtrado = pokemones.filter((pokemon) =>
@@ -123,31 +123,31 @@ const HomeScreen = () => {
                 </Modal>
             )}
 
-          <View style={styles.pagination}>
-              <TouchableOpacity
-                  style={[styles.paginationButton, offset === 0 && styles.disabledButton]}
-                  onPress={() => offset > 0 && setOffset(offset - limit)}
-                  disabled={offset === 0}
-              >
-                  <Text style={styles.paginationButtonText}>Anterior</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                  style={styles.paginationButton}
-                  onPress={() => setOffset(offset + limit)}
-              >
-                  <Text style={styles.paginationButtonText}>Siguiente</Text>
-              </TouchableOpacity>
-          </View>
+        <View style={styles.pagination}>
+            <TouchableOpacity
+                style={[styles.paginationButton, offset === 0 && styles.disabledButton]}
+                onPress={() => offset > 0 && setOffset(offset - limit)}
+                disabled={offset === 0}
+            >
+                <Text style={styles.paginationButtonText}>Anterior</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.paginationButton}
+                onPress={() => setOffset(offset + limit)}
+            >
+                <Text style={styles.paginationButtonText}>Siguiente</Text>
+            </TouchableOpacity>
+        </View>
 
-          <TouchableOpacity
-              style={styles.reloadButton}
-              onPress={() => {
+        <TouchableOpacity
+            style={styles.reloadButton}
+            onPress={() => {
                 setBuscadorPorNombre('');
                 cargarPokemones(0);
             }}
-          >
-              <Text style={styles.reloadButtonText}>Recargar</Text>
-          </TouchableOpacity>
+        >
+            <Text style={styles.reloadButtonText}>Recargar</Text>
+        </TouchableOpacity>
 
         </View>
     );
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
         height: 40, borderColor: '#000', borderWidth: 1, marginBottom: 30, padding: 10, borderRadius: 15,
     },
     pagination: {
-      flexDirection: 'row', justifyContent: 'space-between', position: 'absolute', bottom: 20, left: 20, right: 20,
+        flexDirection: 'row', justifyContent: 'space-between', position: 'absolute', bottom: 20, left: 20, right: 20,
     },
     paginationButton: {
         padding: 15, backgroundColor: '#007bff', borderRadius: 10,
@@ -203,11 +203,11 @@ const styles = StyleSheet.create({
         color: '#fff', fontSize: 16, textAlign: 'center',
     },
     reloadButton: {
-      position: 'absolute', alignContent:'center', bottom: 20, backgroundColor: '#28a745', padding: 15, borderRadius: 30, elevation: 5, justifyContent: 'center', alignSelf: 'center',
+        position: 'absolute', alignContent:'center', bottom: 20, backgroundColor: '#28a745', padding: 15, borderRadius: 30, elevation: 5, justifyContent: 'center', alignSelf: 'center',
     },
     reloadButtonText: {
-      color: '#fff', fontSize: 16, textAlign: 'center',
+        color: '#fff', fontSize: 16, textAlign: 'center',
     },
-  });
+});
 
 export default HomeScreen;
