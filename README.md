@@ -91,7 +91,7 @@ Asegúrate de que el archivo tsconfig.json esté configurado adecuadamente para 
 ### Ejecutar en Expo
 
 ```bash
-npm estart
+npm start
 ```
 
 ### Pruebas Test 
