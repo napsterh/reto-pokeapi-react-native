@@ -40,7 +40,7 @@
       "@testing-library/jest-native/extend-expect"
     ],
     "moduleNameMapper": {
-      "^@react-native-async-storage/async-storage$": "<rootDir>/src/mocks/@react-native-async-storage/async-storage.js"
+      "^@react-native-async-storage/async-storage$": "<rootDir>/mocks/@react-native-async-storage/async-storage.js"
     }
   },
   "private": true
